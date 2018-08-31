@@ -47,11 +47,13 @@ public class WeatherEntry implements Serializable {
 
     public void setWeatherIcon(String weatherIcon) {
         this.weatherIcon = weatherIcon;
-    }
-/*
+    } */
+
     @JsonProperty("main")
     public void setMain(Map<String, Object> main) {
+        System.out.println("Temperature from API :: " + main.get("temp").toString());
         double celsiusTemp = Double.parseDouble(main.get("temp").toString()) - 273.15;
+        System.out.println("Celcius temperature :: " + celsiusTemp);
         setTemperature(celsiusTemp);
     }
 
