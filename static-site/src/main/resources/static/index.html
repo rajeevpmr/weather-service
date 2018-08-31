@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Display Weather</title>
+</head>
+<body>
+<div>
+    <h1>Select Your Cities</h1>
+    <p>
+        To know the Forecast
+    </p>
+    <div>
+        <select name="city" id="city">
+
+        </select>
+
+    </div>
+    <div id="forecast" >
+
+    </div>
+</div>
+
+</body>
+
+<script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+
+<script>
+
+var cities= $("#city"); //Drop Down List ID
+    $.ajax({
+    url: 'http://localhost:9999/cities/',
+    type: 'GET',
+    dataType: 'json',
+    contentType: 'application/json; charset=utf-8',
+    success: function (data) {
+        cities.append($('<option>', { value: -1, text: 'Select a City' }));
+       $(data).each(function (index, item) {
+            cities.append($('<option>', { value:item, text:item}));
+       });
+    }
+});
+
+var city = $("#city");
+city.change(function() {
+    
+    console.log("Dropdown selected" + $("#city :selected").text());
+    $.ajax({
+        url:'http://localhost:9999/forecast/london',
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            $( "#forecast" ).text(JSON.stringify(data));
+        }
+    
+    });
+
+
+});
+
+</script>
+</html>
