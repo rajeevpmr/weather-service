@@ -16,7 +16,10 @@
         </select>
 
     </div>
-    <div id="forecast" >
+    <div>
+        
+    </div>
+    <div id="forecast" style="color: mediumseagreen; font-size: 20" >
 
     </div>
 </div>
@@ -47,15 +50,22 @@ var cities= $("#city"); //Drop Down List ID
 var city = $("#city");
 city.change(function() {
     
-    console.log("Dropdown selected" + $("#city :selected").text());
+    var selectedCity = $("#city :selected").text();
+    console.log("Dropdown selected" + selectedCity);
     $.ajax({
-        url:'http://localhost:9999/forecast/london',
+        url:'http://localhost:9999/forecast/'+selectedCity,
         type: 'GET',
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            $( "#forecast" ).text(JSON.stringify(data));
+            console.log("Data recieved" + data);
+            $( "#forecast" ).text(JSON.stringify(data.response));
+        },
+        error: function(data){
+            console.error("What the hell" + data);
+            
         }
+        
     
     });
 

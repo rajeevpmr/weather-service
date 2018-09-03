@@ -27,15 +27,30 @@ public class WeatherApiRestController {
          return builder.toString();
     }*/
 
-   public WeatherForecast fallback(String city) {
-        return new WeatherForecast();
+   public StringResponse fallback(String city) {
+        return new StringResponse("I am in trouble!");
     }
 
    @CrossOrigin
    @HystrixCommand(fallbackMethod = "fallback")
-   @RequestMapping(method = RequestMethod.GET, value = "/forecast/{city}")
-   WeatherForecast forecast(@PathVariable String city){
-       return this.client.forecast(city);
+   @RequestMapping(method = RequestMethod.GET, value = "/forecast/{city}", produces = "application/json")
+   StringResponse forecast(@PathVariable String city){
+
+       String returnVal = "Take a jacket, it might get cold";
+       double compareTemp = 25.0;
+       boolean isHot = false;
+       for ( WeatherEntry entry :  this.client.forecast(city).getEntries()){
+
+           if (entry.getTemperature() > compareTemp){
+               isHot = true;
+           }
+       }
+
+       if (isHot){
+           returnVal = "Take your Sunscreen";
+       }
+
+       return new StringResponse(returnVal);
    }
 
     @CrossOrigin
@@ -45,4 +60,17 @@ public class WeatherApiRestController {
     }
 
 
+    class StringResponse {
+        public StringResponse(String response) {
+            this.response = response;
+        }
+
+        public String getResponse() {
+            return response;
+        }
+
+
+        private String response;
+
+    }
 }
